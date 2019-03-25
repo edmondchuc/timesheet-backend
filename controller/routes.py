@@ -1,4 +1,4 @@
-from flask import Blueprint, send_from_directory, Response, request, g, jsonify
+from flask import Blueprint, send_from_directory, Response, request, g, jsonify, render_template
 from config import Config
 from passlib.hash import pbkdf2_sha256
 import database
@@ -134,4 +134,4 @@ def update_client():
 
 @routes.route('/')
 def index():
-    return 'index.html'
+    return render_template('index.html')
