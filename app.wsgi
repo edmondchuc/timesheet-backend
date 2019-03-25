@@ -2,7 +2,7 @@ import sys
 import os
 
 # Add the app's directory to the PYTHONPATH
-sys.path.insert(0, "/var/www/wsgi/rdf-graph-viewer")
+sys.path.insert(0, "/var/www/wsgi/timesheet")
 
 # Activate the virtualenv
 activate_this = os.path.join('/var/www/wsgi/timesheet/venv/bin/activate_this.py')
