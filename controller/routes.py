@@ -87,16 +87,18 @@ def create_client():
         return Response(status=401)
 
     # Create the client.
-    result = client.create(get_db(), decoded_jwt.get('user_id'), data.get('name'))
-    if result:
+    client_id = client.create(get_db(), decoded_jwt.get('user_id'), data.get('name'))
+    if client_id:
         # Create the sessions for the client for the current month.
         row = data.get('row')
         today = datetime.date.today()
         for i, duration in enumerate(row):
             date = datetime.date(today.year, today.month, i + 1)
-            session.create(get_db(), result, date, duration)
+            session.create(get_db(), client_id, date, duration)
 
-        return jsonify({'client_id': result, 'name': data.get('name'), 'row': data.get('row')})
+            row = client.get_one(get_db(), client_id)
+
+        return jsonify({'client_id': client_id, 'name': data.get('name'), 'row': row})
 
     return Response(status=401)
 
@@ -110,12 +112,24 @@ def get_clients():
         return Response(status=401)
 
     result = client.get_all(get_db(), decoded_jwt.get('user_id'))
+    if not result:
+        return Response(status=200)
     return jsonify(result)
 
 
-@routes.route('/user/client/<int:client>', methods=['PUT'])
+@routes.route('/user/client', methods=['PUT'])
 def update_client():
-    return 'hello'
+    data = request.get_json()
+
+    decoded_jwt = jwt_auth(request)
+    if not decoded_jwt:
+        return Response(status=401)
+
+    result = session.update_one(get_db(), data.get('session_id'), data.get('duration'))
+    if not result:
+        return Response(status=400)
+
+    return jsonify({'session_id': data.get('session_id'), 'duration': data.get('duration')})
 
 
 @routes.route('/')
