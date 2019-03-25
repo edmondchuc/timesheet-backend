@@ -109,7 +109,7 @@ def get_clients():
     Get all the sessions for the given client_id in the current month."""
     decoded_jwt = jwt_auth(request)
     if not decoded_jwt:
-        return Response(status=401)
+        return Response('Failed to retrieve JWT token.', status=401)
 
     result = client.get_all(get_db(), decoded_jwt.get('user_id'))
     if not result:
