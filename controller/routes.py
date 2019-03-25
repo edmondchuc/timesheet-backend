@@ -135,3 +135,8 @@ def update_client():
 @routes.route('/')
 def index():
     return render_template('index.html')
+
+
+@routes.route('/test')
+def test():
+    return 'test';
